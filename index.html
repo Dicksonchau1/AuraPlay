@@ -1,1 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AuraPlay — Soft Space & Be-Relate Zone</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>AuraPlay</h1>
+    <div class="tokens">Tokens: <span id="tokenCount">0</span></div>
+  </header>
 
+  <main class="app">
+    <section id="home">
+      <button id="btnSoftSpace" class="big-btn">Start Soft Space (60s)</button>
+      <button id="btnBeRelate" class="big-btn">Open Be-Relate Zone</button>
+      <button id="btnMaze" class="big-btn">Start Be-Relate Maze (60s)</button>
+    </section>
+
+    <!-- Soft Space (breathing) -->
+    <section id="softSpace" class="screen hidden">
+      <h2>Soft Space</h2>
+      <div class="breath-area">
+        <div id="breathCircle" class="circle"></div>
+      </div>
+      <div class="timer">Time left: <span id="softTimer">60</span>s</div>
+      <div class="controls">
+        <button id="softEnd" class="small-btn">End early</button>
+      </div>
+    </section>
+
+    <!-- Bubble micro-task at end -->
+    <section id="bubbles" class="screen hidden">
+      <h2>Pop the Bubbles</h2>
+      <div id="bubbleArea" class="bubble-area"></div>
+      <div class="controls">
+        <button id="finishBubbles" class="small-btn hidden">Finish</button>
+      </div>
+    </section>
+
+    <!-- Be-Relate Zone (gentle message) -->
+    <section id="beRelate" class="screen hidden">
+      <h2>Be-Relate Zone</h2>
+      <p>Take a moment. You did great—breathe slow and smile.</p>
+      <button id="closeBeRelate" class="small-btn">Back</button>
+    </section>
+
+    <!-- Simple linear Maze -->
+    <section id="maze" class="screen hidden">
+      <h2>Be-Relate Maze</h2>
+      <div class="maze-area">
+        <div id="nodeContainer" class="node-container"></div>
+      </div>
+      <div class="maze-stats">Time left: <span id="mazeTimer">60</span>s — Score: <span id="mazeScore">0</span></div>
+      <div class="controls">
+        <button id="btnEndMaze" class="small-btn">End early</button>
+      </div>
+      <div id="mazeResult" class="hidden result"></div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
