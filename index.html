@@ -1,66 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AuraPlay — Soft Space & Be-Relate Zone</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Sense — Early Identification & Intervention Platform</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <h1>AuraPlay</h1>
-    <div class="tokens">Tokens: <span id="tokenCount">0</span></div>
-  </header>
 
-  <main class="app">
-    <section id="home">
-      <button id="btnSoftSpace" class="big-btn">Start Soft Space (60s)</button>
-      <button id="btnBeRelate" class="big-btn">Open Be-Relate Zone</button>
-      <button id="btnMaze" class="big-btn">Start Be-Relate Maze (60s)</button>
-    </section>
+    <!-- ============================================= -->
+    <!-- GLOBAL UI ELEMENTS                            -->
+    <!-- ============================================= -->
+    <header class="global-header">
+        <h1 class="logo">Aura Sense</h1>
+        <div class="rewards-display">
+            <span>Rewards:</span>
+            <span id="rewards-count">0</span>
+        </div>
+    </header>
 
-    <!-- Soft Space (breathing) -->
-    <section id="softSpace" class="screen hidden">
-      <h2>Soft Space</h2>
-      <div class="breath-area">
-        <div id="breathCircle" class="circle"></div>
-      </div>
-      <div class="timer">Time left: <span id="softTimer">60</span>s</div>
-      <div class="controls">
-        <button id="softEnd" class="small-btn">End early</button>
-      </div>
-    </section>
+    <!-- ============================================= -->
+    <!-- MAIN APP CONTAINER (Holds all screens)       -->
+    <!-- ============================================= -->
+    <main id="app-container">
 
-    <!-- Bubble micro-task at end -->
-    <section id="bubbles" class="screen hidden">
-      <h2>Pop the Bubbles</h2>
-      <div id="bubbleArea" class="bubble-area"></div>
-      <div class="controls">
-        <button id="finishBubbles" class="small-btn hidden">Finish</button>
-      </div>
-    </section>
+        <!-- SCREEN 1: HOME DASHBOARD -->
+        <section id="screen-home" class="screen">
+            <div class="screen-content">
+                <h2>Choose an Activity</h2>
+                <p class="subtitle">Select a gamified assessment to begin.</p>
+                <div class="activity-grid">
+                    <!-- Activity 1: Breathing -->
+                    <div class="activity-card">
+                        <h3>Breathing Exercise</h3>
+                        <p>A calming activity to practice focus and emotional regulation.</p>
+                        <button id="btn-start-breathing" class="btn-primary" data-duration="60">Start (60s)</button>
+                    </div>
+                    <!-- Activity 2: Maze -->
+                    <div class="activity-card">
+                        <h3>Pathfinder Maze</h3>
+                        <p>A challenge to assess planning, attention, and fine motor skills.</p>
+                        <button id="btn-start-maze" class="btn-primary" data-duration="60">Start (60s)</button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Be-Relate Zone (gentle message) -->
-    <section id="beRelate" class="screen hidden">
-      <h2>Be-Relate Zone</h2>
-      <p>Take a moment. You did great—breathe slow and smile.</p>
-      <button id="closeBeRelate" class="small-btn">Back</button>
-    </section>
+        <!-- SCREEN 2: BREATHING EXERCISE (Formerly Soft Space) -->
+        <section id="screen-breathing" class="screen hidden">
+            <div class="screen-header">
+                <h2>Breathing Exercise</h2>
+            </div>
+            <div class="screen-content centered">
+                <div id="breathing-circle" class="breathing-circle">
+                    <span id="breathing-instruction">Breathe In...</span>
+                </div>
+            </div>
+            <div class="screen-footer">
+                <div class="timer">Time: <span id="breathing-timer">60</span>s</div>
+                <button id="btn-end-breathing" class="btn-secondary">End Session</button>
+            </div>
+        </section>
 
-    <!-- Simple linear Maze -->
-    <section id="maze" class="screen hidden">
-      <h2>Be-Relate Maze</h2>
-      <div class="maze-area">
-        <div id="nodeContainer" class="node-container"></div>
-      </div>
-      <div class="maze-stats">Time left: <span id="mazeTimer">60</span>s — Score: <span id="mazeScore">0</span></div>
-      <div class="controls">
-        <button id="btnEndMaze" class="small-btn">End early</button>
-      </div>
-      <div id="mazeResult" class="hidden result"></div>
-    </section>
-  </main>
+        <!-- SCREEN 3: MAZE ASSESSMENT -->
+        <section id="screen-maze" class="screen hidden">
+            <div class="screen-header">
+                <h2>Pathfinder Maze</h2>
+            </div>
+            <div class="screen-content centered">
+                <div id="maze-area" class="maze-area">
+                    <!-- Maze nodes will be generated by JavaScript here -->
+                </div>
+            </div>
+            <div class="screen-footer">
+                <div class="timer">Time: <span id="maze-timer">60</span>s</div>
+                <div class="score">Score: <span id="maze-score">0</span></div>
+                <button id="btn-end-maze" class="btn-secondary">End Session</button>
+            </div>
+        </section>
+        
+        <!-- SCREEN 4: FOCUS CHALLENGE (Formerly Bubbles) -->
+        <section id="screen-bubbles" class="screen hidden">
+            <div class="screen-header">
+                <h2>Focus Challenge</h2>
+                <p class="subtitle">Pop the bubbles as fast as you can!</p>
+            </div>
+            <div id="bubble-area" class="screen-content bubble-area">
+                 <!-- Bubbles will be generated by JavaScript here -->
+            </div>
+            <div class="screen-footer">
+                <button id="btn-finish-bubbles" class="btn-primary hidden">Finish</button>
+            </div>
+        </section>
 
-  <script src="main.js"></script>
+        <!-- SCREEN 5: ASSESSMENT RESULTS (NEW & CRITICAL) -->
+        <section id="screen-results" class="screen hidden">
+             <div class="screen-content">
+                <h2>Assessment Complete</h2>
+                <p class="subtitle">Here is a summary of the performance.</p>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>Score</h3>
+                        <p id="result-score" class="result-value">0</p>
+                        <small>Points earned in the activity.</small>
+                    </div>
+                    <div class="result-card">
+                        <h3>Accuracy</h3>
+                        <p id="result-accuracy" class="result-value">0%</p>
+                        <small>Measure of precision and focus.</small>
+                    </div>
+                    <div class="result-card">
+                        <h3>Time</h3>
+                        <p id="result-time" class="result-value">0s</p>
+                        <small>Time taken to complete the task.</small>
+                    </div>
+                </div>
+                <div id="positive-feedback-zone" class="positive-feedback">
+                    <p>Great effort! Every session helps you grow stronger.</p>
+                </div>
+                <button id="btn-back-to-home" class="btn-primary">Back to Dashboard</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="main.js"></script>
 </body>
 </html>
