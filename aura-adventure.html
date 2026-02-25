@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aura Story | Multi-Chapter Story Experience</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&family=Fredoka+One&family=OpenDyslexic&display=swap');
+
+    :root {
+        --header-bg: #6C63FF;
+        --card-bg: #ffffff;
+        --summary-bg: #F8F9FA;
+        --text-color: #4A4A4A;
+        --accent-blue: #4AA3DF;
+        --font-family: 'Nunito', sans-serif;
+        --text-size: 1rem;
+        --line-height: 1.6;
+        --letter-spacing: normal;
+    }
+
+    body {
+        background-color: #e0e0e0;
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    body.dyslexic-font {
+        --font-family: 'OpenDyslexic', 'Comic Sans MS', sans-serif;
+    }
+
+    body.high-contrast {
+        background-color: #000;
+        --card-bg: #1a1a1a;
+        --summary-bg: #2a2a2a;
+        --text-color: #ffffff;
+    }
+
+    .adventure-card {
+        background-color: var(--card-bg);
+        width: 100%;
+        max-width: 600px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #6C63FF 0%, #5A52D5 100%);
+        padding: 20px;
+        text-align: center;
+        color: white;
+        position: relative;
+    }
+
+    .header-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+
+    .icon-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    .icon-float:nth-child(2) { animation-delay: 0.5s; }
+    .icon-float:nth-child(3) { animation-delay: 1s; }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .card-header h1 {
+        font-family: 'Fredoka One', cursive;
+        font-size: 1.8rem;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .accessibility-bar {
+        background: rgba(255,255,255,0.1);
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .accessibility-btn {
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+        font-family: inherit;
+    }
+
+    .accessibility-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    .accessibility-btn.active {
+        background: #4AA3DF;
+        border-color: #4AA3DF;
+    }
+
+    /* Chapter Selection */
+    .chapter-selection {
+        padding: 20px;
+    }
+
+    .chapter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .chapter-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        padding: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .chapter-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .chapter-card.locked {
+        background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .chapter-card.completed {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    }
+
+    .chapter-number {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .chapter-title {
+        font-family: 'Fredoka One', cursive;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .chapter-description {
+        font-size: 13px;
+        opacity: 0.9;
+        line-height: 1.4;
+    }
+
+    .chapter-status {
+        margin-top: 10px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* Video Player */
+    .media-container {
+        padding: 20px;
+        display: none;
+    }
+
+    .media-container.active {
+        display: block;
+    }
+
+    .video-wrapper {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 15px;
+        border: 4px solid #333;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        background: #000;
+    }
+
+    #auraVideo {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    .play-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        border: 3px solid white;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+    .play-overlay:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        background: rgba(255,255,255,0.5);
+    }
+
+    .play-icon {
+        width: 0;
+        height: 0;
+        border-top: 12px solid transparent;
+        border-bottom: 12px solid transparent;
+        border-left: 20px solid white;
+        margin-left: 5px;
+    }
+
+    .play-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .custom-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        padding: 15px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .video-wrapper:hover .custom-controls {
+        opacity: 1;
+    }
+
+    .progress-container {
+        width: 100%;
+        height: 6px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 3px;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: #4AA3DF;
+        border-radius: 3px;
+        width: 0%;
+        transition: width 0.1s;
+    }
+
+    .control-buttons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        color: white;
+        font-size: 14px;
+    }
+
+    .control-btn {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        transition: transform 0.2s;
+    }
+
+    .control-btn:hover {
+        transform: scale(1.2);
+    }
+
+    .time-display {
+        font-size: 12px;
+        font-family: monospace;
+    }
+
+    .back-btn {
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-bottom: 15px;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+
+    .back-btn:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    .summary-box {
+        background-color: var(--summary-bg);
+        margin: 0 20px 20px 20px;
+        padding: 20px;
+        border-radius: 15px;
+        border: 1px solid #E0E0E0;
+    }
+
+    .summary-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .book-icon {
+        font-size: 1.5rem;
+    }
+
+    .summary-title {
+        color: var(--accent-blue);
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+
+    .summary-text {
+        font-size: var(--text-size);
+        line-height: var(--line-height);
+        letter-spacing: var(--letter-spacing);
+        color: var(--text-color);
+        margin: 0;
+        font-family: var(--font-family);
+    }
+
+    .summary-text span {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .summary-text span.highlighted {
+        background: #FFD700;
+        padding: 2px 4px;
+        border-radius: 3px;
+    }
+
+    .metrics-panel {
+        background: linear-gradient(135deg, #4AA3DF 0%, #2E8BC0 100%);
+        color: white;
+        padding: 15px 20px;
+        margin: 0 20px 20px 20px;
+        border-radius: 15px;
+        display: none;
+    }
+
+    .metrics-panel.visible {
+        display: block;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .metric-item {
+        text-align: center;
+    }
+
+    .metric-value {
+        font-size: 24px;
+        font-weight: 800;
+        font-family: 'Fredoka One', cursive;
+    }
+
+    .metric-label {
+        font-size: 11px;
+        opacity: 0.9;
+        margin-top: 5px;
+    }
+
+    .completion-badge {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        text-align: center;
+        z-index: 1000;
+        transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .completion-badge.show {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    .badge-icon {
+        font-size: 80px;
+        margin-bottom: 15px;
+        animation: rotate 2s ease-in-out;
+    }
+
+    @keyframes rotate {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(360deg); }
+    }
+
+    .badge-title {
+        font-family: 'Fredoka One', cursive;
+        font-size: 24px;
+        color: #6C63FF;
+        margin-bottom: 10px;
+    }
+
+    .badge-message {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .close-badge-btn {
+        margin-top: 20px;
+        background: #6C63FF;
+        color: white;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+</style>
+</head>
+<body>
+
+    <div class="adventure-card">
+        <!-- Header -->
+        <div class="card-header">
+            <div class="header-icons">
+                <div class="icon-float">📖</div>
+                <div class="icon-float">✨</div>
+                <div class="icon-float">🌟</div>
+            </div>
+            <h1>Aura Story</h1>
+
+            <div class="accessibility-bar">
+                <button class="accessibility-btn" onclick="toggleDyslexicFont()">📖 Dyslexic Font</button>
+                <button class="accessibility-btn" onclick="increaseTextSize()">🔍 Text Size +</button>
+                <button class="accessibility-btn" onclick="decreaseTextSize()">🔍 Text Size -</button>
+                <button class="accessibility-btn" onclick="toggleHighContrast()">🌓 High Contrast</button>
+                <button class="accessibility-btn active" id="musicToggleBtn" onclick="toggleBackgroundMusic()">🎵 Music On</button>
+                <button class="accessibility-btn" onclick="toggleMetrics()">📊 Show Metrics</button>
+                <button class="accessibility-btn" onclick="exportMetrics()">💾 Export Data</button>
+            </div>
+        </div>
+
+        <!-- Background Music -->
+        <audio id="backgroundMusic" loop>
+            <source src="https://pfst.cf2.poecdn.net/base/audio/soft-piano-calm.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Chapter Selection -->
+        <div id="chapterSelection" class="chapter-selection">
+            <h2 style="text-align: center; color: var(--text-color); font-family: 'Fredoka One', cursive; margin-bottom: 20px;">Choose Your Chapter</h2>
+            <div class="chapter-grid" id="chapterGrid"></div>
+        </div>
+
+        <!-- Video Player -->
+        <div id="videoPlayer" class="media-container">
+            <button class="back-btn" onclick="backToChapters()">← Back to Chapters</button>
+
+            <div class="video-wrapper">
+                <video id="auraVideo" playsinline>
+                    <source id="videoSource" src="" type="video/mp4">
+                    Your browser doesn't support video playback.
+                </video>
+
+                <div class="play-overlay" id="playOverlay" onclick="togglePlay()">
+                    <div class="play-icon"></div>
+                </div>
+
+                <div class="custom-controls">
+                    <div class="progress-container" onclick="seekVideo(event)">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="control-btn" onclick="togglePlay()" id="playPauseBtn">▶️</button>
+                        <button class="control-btn" onclick="rewind()">⏪</button>
+                        <button class="control-btn" onclick="fastForward()">⏩</button>
+                        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                        <button class="control-btn" onclick="toggleMute()" id="muteBtn">🔊</button>
+                        <button class="control-btn" onclick="toggleFullscreen()">⛶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Box -->
+            <div class="summary-box">
+                <div class="summary-header">
+                    <span class="book-icon">📖</span>
+                    <span class="summary-title" id="chapterTitle">Chapter Summary</span>
+                </div>
+                <p class="summary-text" id="summaryText"></p>
+            </div>
+
+            <!-- Metrics Panel -->
+            <div class="metrics-panel" id="metricsPanel">
+                <div style="font-weight: 800; font-size: 16px; margin-bottom: 5px;">📊 Learning Metrics</div>
+                <div class="metrics-grid">
+                    <div class="metric-item">
+                        <div class="metric-value" id="watchCount">0</div>
+                        <div class="metric-label">Times Watched</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="pauseCount">0</div>
+                        <div class="metric-label">Pauses</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="rewindCount">0</div>
+                        <div class="metric-label">Rewinds</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-value" id="completionRate">0%</div>
+                        <div class="metric-label">Completion</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Badge -->
+    <div class="completion-badge" id="completionBadge">
+        <div class="badge-icon">🏆</div>
+        <div class="badge-title">Chapter Complete!</div>
+        <div class="badge-message" id="badgeMessage">Great job!</div>
+        <button class="close-badge-btn" onclick="closeBadge()">Continue</button>
+    </div>
+
+<script>
+    // Chapters Data
+    const chapters = [
+        {
+            id: 1,
+            title: "Aura's Discovery",
+            description: "Aura learns about the sounds of the world",
+            videoUrl: "https://pfst.cf2.poecdn.net/base/video/300b6898f77bb82092b4117f82987cdef30777b932f6e4211a98f4f858dfda68",
+            summary: [
+                "Aura is a magical star spirit who lives high in the sky!",
+                "First, Aura wakes up and shines brightly.",
+                "Then, Aura looks down and spots a noisy car.",
+                "Finally, Aura learns about the sounds of the world in the most magical way possible!"
+            ],
+            locked: false
+        },
+        {
+            id: 2,
+            title: "Cloud Journey",
+            description: "Aura explores the magical clouds",
+            videoUrl: "https://pfst.cf2.poecdn.net/base/video/396b47c93d9f0b6f691e9f16ce2aa1d06377ac23a6380f13b7ee3bda4ae0b3d1",
+            summary: [
+                "Aura floats through the fluffy white clouds.",
+                "She meets friendly cloud creatures along the way.",
+                "Together, they create beautiful shapes in the sky.",
+                "Aura discovers the joy of making new friends!"
+            ],
+            locked: false
+        },
+        {
+            id: 3,
+            title: "Maze Adventure",
+            description: "Aura navigates through a magical maze",
+            videoUrl: "https://pfst.cf2.poecdn.net/base/video/a9bfe3edf41c4fb5b8490757fc767cff3d90e2b62392f67ae2faf76d030b442c",
+            summary: [
+                "Aura enters a mysterious glowing maze.",
+                "She uses her bright light to find the way.",
+                "Each turn reveals new surprises and challenges.",
+                "With courage and wisdom, Aura finds the exit!"
+            ],
+            locked: false
+        },
+        {
+            id: 4,
+            title: "Meet Aura",
+            description: "Discover Aura, your magical companion",
+            videoUrl: "https://pfst.cf2.poecdn.net/base/video/9bdd41af5ee183e6d955cdfcd878bf028188f265e4b956d61034c40c2256bc33",
+            summary: [
+                "This is Aura, a special star spirit friend.",
+                "Aura loves to explore and learn new things.",
+                "She helps children discover the magic around them.",
+                "Together, you'll go on amazing adventures!"
+            ],
+            locked: false
+        }
+    ];
+
+    // State
+    let currentChapter = null;
+    let completedChapters = new Set();
+    const video = document.getElementById('auraVideo');
+    const playOverlay = document.getElementById('playOverlay');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBar = document.getElementById('progressBar');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const muteBtn = document.getElementById('muteBtn');
+    const backgroundMusic = document.getElementById('backgroundMusic');
+
+    backgroundMusic.volume = 0.2;
+
+    let metrics = {
+        watchCount: 0,
+        pauseCount: 0,
+        rewindCount: 0,
+        fastForwardCount: 0,
+        completions: 0,
+        lastPosition: 0,
+        startTime: null
+    };
+
+    // Initialize
+    function init() {
+        renderChapterGrid();
+    }
+
+    function renderChapterGrid() {
+        const grid = document.getElementById('chapterGrid');
+        grid.innerHTML = chapters.map(chapter => `
+            <div class="chapter-card ${chapter.locked ? 'locked' : ''} ${completedChapters.has(chapter.id) ? 'completed' : ''}"
+                 onclick="${chapter.locked ? '' : `loadChapter(${chapter.id})`}">
+                <div class="chapter-number">Chapter ${chapter.id}</div>
+                <div class="chapter-title">${chapter.title}</div>
+                <div class="chapter-description">${chapter.description}</div>
+                <div class="chapter-status">
+                    ${completedChapters.has(chapter.id) ? '✅ Completed' : chapter.locked ? '🔒 Locked' : '▶️ Play'}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function loadChapter(chapterId) {
+        currentChapter = chapters.find(c => c.id === chapterId);
+        if (!currentChapter) return;
+
+        // Update video source
+        document.getElementById('videoSource').src = currentChapter.videoUrl;
+        video.load();
+
+        // Update summary
+        document.getElementById('chapterTitle').textContent = currentChapter.title;
+        document.getElementById('summaryText').innerHTML = currentChapter.summary
+            .map(text => `<span>${text}</span>`)
+            .join('');
+
+        // Show video player, hide chapter selection
+        document.getElementById('chapterSelection').style.display = 'none';
+        document.getElementById('videoPlayer').classList.add('active');
+
+        // Reset metrics for new chapter
+        metrics.watchCount = 0;
+        metrics.pauseCount = 0;
+        metrics.rewindCount = 0;
+        metrics.completions = 0;
+        updateMetricsDisplay();
+    }
+
+    function backToChapters() {
+        // Pause video and music
+        video.pause();
+        backgroundMusic.pause();
+
+        // Reset UI
+        playOverlay.classList.remove('hidden');
+        playPauseBtn.textContent = '▶️';
+
+        // Show chapter selection
+        document.getElementById('chapterSelection').style.display = 'block';
+        document.getElementById('videoPlayer').classList.remove('active');
+
+        renderChapterGrid();
+    }
+
+    // Video Controls
+    function togglePlay() {
+        if (video.paused) {
+            video.play();
+            backgroundMusic.play().catch(e => console.log('Music autoplay prevented'));
+            playOverlay.classList.add('hidden');
+            playPauseBtn.textContent = '⏸️';
+
+            if (metrics.startTime === null) {
+                metrics.startTime = Date.now();
+                metrics.watchCount++;
+                updateMetricsDisplay();
+            }
+        } else {
+            video.pause();
+            backgroundMusic.pause();
+            playPauseBtn.textContent = '▶️';
+            metrics.pauseCount++;
+            updateMetricsDisplay();
+        }
+    }
+
+    function rewind() {
+        video.currentTime = Math.max(0, video.currentTime - 5);
+        metrics.rewindCount++;
+        updateMetricsDisplay();
+    }
+
+    function fastForward() {
+        video.currentTime = Math.min(video.duration, video.currentTime + 5);
+        metrics.fastForwardCount++;
+    }
+
+    function toggleMute() {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+    }
+
+    function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            video.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function seekVideo(event) {
+        const progressContainer = event.currentTarget;
+        const clickX = event.offsetX;
+        const width = progressContainer.offsetWidth;
+        const percentage = clickX / width;
+        video.currentTime = percentage * video.duration;
+    }
+
+    // Video Events
+    video.addEventListener('timeupdate', () => {
+        const percentage = (video.currentTime / video.duration) * 100;
+        progressBar.style.width = percentage + '%';
+
+        const currentMin = Math.floor(video.currentTime / 60);
+        const currentSec = Math.floor(video.currentTime % 60);
+        const durationMin = Math.floor(video.duration / 60);
+        const durationSec = Math.floor(video.duration % 60);
+
+        timeDisplay.textContent = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${durationMin}:${durationSec.toString().padStart(2, '0')}`;
+
+        const completion = Math.round((video.currentTime / video.duration) * 100);
+        document.getElementById('completionRate').textContent = completion + '%';
+
+        metrics.lastPosition = video.currentTime;
+    });
+
+    video.addEventListener('ended', () => {
+        playOverlay.classList.remove('hidden');
+        playPauseBtn.textContent = '▶️';
+
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+
+        metrics.completions++;
+
+        // Mark chapter as completed
+        if (currentChapter) {
+            completedChapters.add(currentChapter.id);
+        }
+
+        // Show completion badge
+        document.getElementById('badgeMessage').textContent = `You completed ${currentChapter.title}!`;
+        document.getElementById('completionBadge').classList.add('show');
+    });
+
+    function closeBadge() {
+        document.getElementById('completionBadge').classList.remove('show');
+        backToChapters();
+    }
+
+    // Accessibility Functions
+    function toggleDyslexicFont() {
+        document.body.classList.toggle('dyslexic-font');
+        event.target.classList.toggle('active');
+    }
+
+    function increaseTextSize() {
+        const root = document.documentElement;
+        const currentSize = parseFloat(getComputedStyle(root).getPropertyValue('--text-size'));
+        root.style.setProperty('--text-size', (currentSize + 0.1) + 'rem');
+        root.style.setProperty('--line-height', (parseFloat(getComputedStyle(root).getPropertyValue('--line-height')) + 0.1));
+    }
+
+    function decreaseTextSize() {
+        const root = document.documentElement;
+        const currentSize = parseFloat(getComputedStyle(root).getPropertyValue('--text-size'));
+        if (currentSize > 0.8) {
+            root.style.setProperty('--text-size', (currentSize - 0.1) + 'rem');
+            root.style.setProperty('--line-height', (parseFloat(getComputedStyle(root).getPropertyValue('--line-height')) - 0.1));
+        }
+    }
+
+    function toggleHighContrast() {
+        document.body.classList.toggle('high-contrast');
+        event.target.classList.toggle('active');
+    }
+
+    function toggleMetrics() {
+        document.getElementById('metricsPanel').classList.toggle('visible');
+        event.target.classList.toggle('active');
+    }
+
+    function toggleBackgroundMusic() {
+        const musicBtn = document.getElementById('musicToggleBtn');
+        if (backgroundMusic.paused) {
+            if (!video.paused) {
+                backgroundMusic.play().catch(e => console.log('Music prevented'));
+            }
+            musicBtn.textContent = '🎵 Music On';
+            musicBtn.classList.add('active');
+        } else {
+            backgroundMusic.pause();
+            musicBtn.textContent = '🔇 Music Off';
+            musicBtn.classList.remove('active');
+        }
+    }
+
+    function updateMetricsDisplay() {
+        document.getElementById('watchCount').textContent = metrics.watchCount;
+        document.getElementById('pauseCount').textContent = metrics.pauseCount;
+        document.getElementById('rewindCount').textContent = metrics.rewindCount;
+    }
+
+    function exportMetrics() {
+        const data = {
+            ...metrics,
+            currentChapter: currentChapter ? currentChapter.title : 'None',
+            completedChapters: Array.from(completedChapters),
+            exportDate: new Date().toISOString(),
+            childName: 'Student',
+            activity: 'Aura Story'
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aura-story-metrics-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && document.getElementById('videoPlayer').classList.contains('active')) {
+            e.preventDefault();
+            togglePlay();
+        } else if (e.code === 'ArrowLeft') {
+            rewind();
+        } else if (e.code === 'ArrowRight') {
+            fastForward();
+        } else if (e.code === 'KeyM') {
+            toggleMute();
+        }
+    });
+
+    // Initialize on load
+    init();
+</script>
+
+</body>
+</html>

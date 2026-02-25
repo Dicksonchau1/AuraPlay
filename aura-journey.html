@@ -1,0 +1,1066 @@
+<!DOCTYPE html><html lang="en"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎬 Aura: Journey Through the Unknown - A Cinematic Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&amp;family=Quicksand:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #1a0a2e 0%, #16213e 30%, #0f3460 60%, #1a0a2e 100%);
+            color: #fff;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        body.show-cursor {
+            cursor: default;
+        }
+
+        /* ===== ANIMATED BUBBLES ===== */
+        .bubbles-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatBubble linear infinite;
+            opacity: 0.4;
+        }
+
+        .bubble:nth-child(1) { width: 80px; height: 80px; left: 5%; animation-duration: 15s; animation-delay: 0s; background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.6), rgba(75, 0, 130, 0.3)); }
+        .bubble:nth-child(2) { width: 50px; height: 50px; left: 15%; animation-duration: 12s; animation-delay: 2s; background: radial-gradient(circle at 30% 30%, rgba(65, 105, 225, 0.6), rgba(30, 144, 255, 0.3)); }
+        .bubble:nth-child(3) { width: 120px; height: 120px; left: 25%; animation-duration: 18s; animation-delay: 4s; background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.5), rgba(255, 165, 0, 0.2)); }
+        .bubble:nth-child(4) { width: 40px; height: 40px; left: 35%; animation-duration: 10s; animation-delay: 1s; background: radial-gradient(circle at 30% 30%, rgba(147, 112, 219, 0.6), rgba(138, 43, 226, 0.3)); }
+        .bubble:nth-child(5) { width: 100px; height: 100px; left: 45%; animation-duration: 16s; animation-delay: 3s; background: radial-gradient(circle at 30% 30%, rgba(0, 191, 255, 0.5), rgba(30, 144, 255, 0.3)); }
+        .bubble:nth-child(6) { width: 60px; height: 60px; left: 55%; animation-duration: 14s; animation-delay: 5s; background: radial-gradient(circle at 30% 30%, rgba(255, 105, 180, 0.5), rgba(255, 20, 147, 0.2)); }
+        .bubble:nth-child(7) { width: 90px; height: 90px; left: 65%; animation-duration: 17s; animation-delay: 2s; background: radial-gradient(circle at 30% 30%, rgba(123, 104, 238, 0.6), rgba(75, 0, 130, 0.3)); }
+        .bubble:nth-child(8) { width: 70px; height: 70px; left: 75%; animation-duration: 13s; animation-delay: 4s; background: radial-gradient(circle at 30% 30%, rgba(64, 224, 208, 0.5), rgba(0, 206, 209, 0.3)); }
+        .bubble:nth-child(9) { width: 45px; height: 45px; left: 85%; animation-duration: 11s; animation-delay: 1s; background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.6), rgba(255, 140, 0, 0.3)); }
+        .bubble:nth-child(10) { width: 110px; height: 110px; left: 92%; animation-duration: 19s; animation-delay: 6s; background: radial-gradient(circle at 30% 30%, rgba(138, 43, 226, 0.5), rgba(75, 0, 130, 0.2)); }
+
+        @keyframes floatBubble {
+            0% { bottom: -150px; transform: translateX(0) scale(0.8); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { bottom: 110vh; transform: translateX(100px) scale(1.2); opacity: 0; }
+        }
+
+        /* ===== CINEMA CONTAINER ===== */
+        .cinema {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            z-index: 10;
+        }
+
+        /* ===== LETTERBOX BARS ===== */
+        .letterbox {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(180deg, rgba(26, 10, 46, 0.95), rgba(15, 52, 96, 0.9));
+            z-index: 100;
+            transition: height 1s ease;
+        }
+
+        .letterbox.top { top: 0; height: 10vh; }
+        .letterbox.bottom { bottom: 0; height: 10vh; background: linear-gradient(0deg, rgba(26, 10, 46, 0.95), rgba(15, 52, 96, 0.9)); }
+
+        .letterbox.expanded { height: 50vh; }
+
+        /* ===== VIDEO PLAYER ===== */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .main-video.visible {
+            opacity: 1;
+        }
+
+        /* ===== GRADIENT TEXT STYLES ===== */
+        .gradient-text-title {
+            font-family: 'Fredoka', sans-serif;
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 25%, #3b82f6 50%, #8b5cf6 75%, #a855f7 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 4s ease infinite;
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+        }
+
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ffec8b 25%, #ffa500 50%, #ffd700 75%, #ffec8b 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 3s ease infinite;
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ===== INTRO SCREEN ===== */
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.4) 0%, rgba(26, 10, 46, 0.95) 70%, #1a0a2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            transition: opacity 2s ease;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .studio-logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeInUp 2s ease 0.5s forwards;
+        }
+
+        .movie-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(3rem, 12vw, 7rem);
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #ffd700 0%, #fff 20%, #ffd700 40%, #ffec8b 60%, #ffd700 80%, #fff 100%);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: goldShimmer 4s ease infinite, fadeInUp 2s ease 1s forwards;
+            opacity: 0;
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.5));
+        }
+
+        .movie-subtitle {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(1.1rem, 3.5vw, 2rem);
+            font-weight: 500;
+            margin-top: 25px;
+            letter-spacing: 3px;
+            opacity: 0;
+            animation: fadeInUp 2s ease 1.5s forwards;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .start-prompt {
+            position: absolute;
+            bottom: 15%;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ffd700, #ffec8b, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeInUp 2s ease 2.5s forwards, pulse 2s ease-in-out infinite 3s;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes goldShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* ===== CHAPTER CARD ===== */
+        .chapter-card {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.5) 0%, rgba(26, 10, 46, 0.95) 70%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 150;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+
+        .chapter-card.visible {
+            opacity: 1;
+        }
+
+        .chapter-number {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chapter-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(2rem, 7vw, 4rem);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
+            max-width: 85%;
+            background: linear-gradient(135deg, #ffd700, #fff, #ffd700, #ffec8b);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: goldShimmer 3s ease infinite;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+        }
+
+        .chapter-subtitle {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 20px;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #c4b5fd, #a5b4fc, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== CONTROLS OVERLAY ===== */
+        .controls-overlay {
+            position: fixed;
+            bottom: 12vh;
+            left: 0;
+            right: 0;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            z-index: 120;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .controls-overlay.visible {
+            opacity: 1;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(167, 139, 250, 0.4);
+            color: #fff;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(99, 102, 241, 0.5));
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .control-btn.play-pause {
+            width: 75px;
+            height: 75px;
+            font-size: 28px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 165, 0, 0.3));
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .control-btn.play-pause:hover {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 165, 0, 0.5));
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            flex: 1;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.3), rgba(99, 102, 241, 0.3));
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffec8b, #ffd700);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .progress-time {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #c4b5fd, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scene Indicator */
+        .scene-indicator {
+            position: fixed;
+            top: 12vh;
+            left: 40px;
+            z-index: 120;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .scene-indicator.visible {
+            opacity: 1;
+        }
+
+        .scene-label {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .scene-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 5px;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #ffd700, #ffec8b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== CREDITS SCREEN ===== */
+        .credits-screen {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.4) 0%, #1a0a2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 100vh;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+        }
+
+        .credits-screen.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .credits-content {
+            text-align: center;
+            animation: scrollCredits 30s linear forwards;
+        }
+
+        @keyframes scrollCredits {
+            from { transform: translateY(0); }
+            to { transform: translateY(-150vh); }
+        }
+
+        .credits-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #ffd700, #fff, #ffd700);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: goldShimmer 3s ease infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
+        }
+
+        .credits-section {
+            margin-bottom: 60px;
+        }
+
+        .credits-role {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .credits-name {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ffd700, #ffec8b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .credits-thanks {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-top: 80px;
+            max-width: 500px;
+            line-height: 2;
+            background: linear-gradient(90deg, #c4b5fd, #a5b4fc, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .credits-end {
+            margin-top: 100px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #ffd700, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+        }
+
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.5) 0%, #1a0a2e 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            transition: opacity 1s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 3px solid rgba(139, 92, 246, 0.3);
+            border-top-color: #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 30px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 4px;
+            background: linear-gradient(90deg, #a855f7, #6366f1, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== FADE OVERLAY ===== */
+        .fade-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, rgba(75, 0, 130, 0.8) 0%, #1a0a2e 100%);
+            z-index: 140;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+
+        .fade-overlay.visible {
+            opacity: 1;
+        }
+
+        /* ===== BACK TO AURAPLAY BUTTON ===== */
+        .back-to-auraplay {
+            position: fixed;
+            top: 12vh;
+            right: 40px;
+            z-index: 120;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(99, 102, 241, 0.4));
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(167, 139, 250, 0.5);
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .back-to-auraplay:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.6), rgba(99, 102, 241, 0.6));
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .back-icon {
+            font-size: 20px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #ffd700, #ffec8b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #c4b5fd, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .letterbox.top, .letterbox.bottom { height: 8vh; }
+            .controls-overlay { bottom: 10vh; padding: 15px 20px; gap: 15px; }
+            .control-btn { width: 48px; height: 48px; font-size: 18px; }
+            .control-btn.play-pause { width: 65px; height: 65px; }
+            .progress-container { max-width: 200px; }
+            .scene-indicator { left: 20px; top: 10vh; }
+            .back-to-auraplay { right: 20px; top: 10vh; padding: 10px 16px; }
+            .back-text { display: none; }
+        }
+    </style>
+</head>
+<body class="show-cursor">
+    <!-- ANIMATED BUBBLES -->
+    <div class="bubbles-container">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">PREPARING YOUR EXPERIENCE</div>
+    </div>
+
+    <!-- INTRO SCREEN -->
+    <div class="intro-screen" id="intro-screen">
+        <div class="studio-logo">✨ AuraLab Pictures Presents ✨</div>
+        <h1 class="movie-title">AURA</h1>
+        <p class="movie-subtitle">Journey Through the Unknown</p>
+        <div class="start-prompt">— Tap anywhere to begin —</div>
+    </div>
+
+    <!-- CHAPTER CARD -->
+    <div class="chapter-card" id="chapter-card">
+        <div class="chapter-number" id="chapter-number">Chapter I</div>
+        <h2 class="chapter-title" id="chapter-title">The Beginning</h2>
+        <p class="chapter-subtitle" id="chapter-subtitle">Where dreams take flight</p>
+    </div>
+
+    <!-- LETTERBOX BARS -->
+    <div class="letterbox top" id="letterbox-top"></div>
+    <div class="letterbox bottom" id="letterbox-bottom"></div>
+
+    <!-- FADE OVERLAY -->
+    <div class="fade-overlay" id="fade-overlay"></div>
+
+    <!-- CINEMA -->
+    <div class="cinema">
+        <div class="video-container">
+            <video class="main-video" id="main-video" playsinline=""></video>
+        </div>
+    </div>
+
+    <!-- SCENE INDICATOR -->
+    <div class="scene-indicator" id="scene-indicator">
+        <div class="scene-label">✨ Now Playing</div>
+        <div class="scene-name" id="scene-name">—</div>
+    </div>
+
+    <!-- BACK TO AURAPLAY BUTTON -->
+    <a href="index.html" id="backToAuraPlay" class="back-to-auraplay" title="Back to AuraPlay">
+        <span class="back-icon">←</span>
+        <span class="back-text">AuraPlay</span>
+    </a>
+
+    <!-- CONTROLS -->
+    <div class="controls-overlay" id="controls">
+        <button class="control-btn" id="prev-btn" title="Previous Scene">⏮</button>
+        <button class="control-btn play-pause" id="play-btn" title="Play/Pause">▶</button>
+        <button class="control-btn" id="next-btn" title="Next Scene">⏭</button>
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-time">
+                <span id="current-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREDITS -->
+    <div class="credits-screen" id="credits-screen">
+        <div class="credits-content">
+            <h1 class="credits-title">AURA</h1>
+
+            <div class="credits-section">
+                <div class="credits-role">Starring</div>
+                <div class="credits-name">Aura</div>
+            </div>
+
+            <div class="credits-section">
+                <div class="credits-role">Created By</div>
+                <div class="credits-name">You &amp; Aura</div>
+            </div>
+
+            <div class="credits-section">
+                <div class="credits-role">Music &amp; Sound</div>
+                <div class="credits-name">The Universe</div>
+            </div>
+
+            <div class="credits-section">
+                <div class="credits-role">Visual Effects</div>
+                <div class="credits-name">Dreams &amp; Imagination</div>
+            </div>
+
+            <div class="credits-section">
+                <div class="credits-role">Special Thanks</div>
+                <div class="credits-name">Every Dreamer</div>
+            </div>
+
+            <p class="credits-thanks">
+                "The journey through the unknown is not about the destination,<br>
+                but about the courage to take the first step.<br><br>
+                Thank you for joining Aura on this adventure."
+            </p>
+
+            <div class="credits-end">✨ THE END ✨</div>
+        </div>
+    </div>
+
+    <script>
+        // ===== MOVIE DATA =====
+        const scenes = [
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/d5652d65ed189d52128e5af282585c4e3278fe07b321c7b679b10ed0bb79b675',
+                chapter: 'Chapter I',
+                title: 'The Awakening',
+                subtitle: 'Where Aura first opens their eyes'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/4e5b7a7d05a6d087efb1d37f14b927cacc285ec6a4f1a2249694b8d4f751576b',
+                chapter: 'Chapter I.II',
+                title: 'First Steps',
+                subtitle: 'A journey begins with wonder'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/400cc57569c97cc730c1bba7dcaa212cdb2c50a9e3c5465f8fe60be1d357ab80',
+                chapter: 'Chapter II',
+                title: 'The Discovery',
+                subtitle: 'A world of wonder unfolds'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/97c18c940b69ba4f660614133f4ded6c31b76223e209706e8df9ba6801de76ae',
+                chapter: 'Chapter III',
+                title: 'Into the Unknown',
+                subtitle: 'Courage lights the way'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/ea43122355a75ef8285891fae01ae984c06ccde69876a7e292f9c8524caa6af5',
+                chapter: 'Chapter III.I',
+                title: 'The Challenge',
+                subtitle: 'Finding strength within'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/dbfe24d46945bb8b07c7ad5c1789065578a619ebe6bfd55fdf7cb3ced60952ed',
+                chapter: 'Chapter III',
+                title: 'Magic Wand Aura',
+                subtitle: 'When magic reveals itself'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/02d7823ece110557f1f124641bd58e33ad11d7615844cc0155fe933e9915dbe3',
+                chapter: 'Chapter IV',
+                title: 'New Horizons',
+                subtitle: 'Beyond the familiar'
+            },
+            {
+                video: 'https://pfst.cf2.poecdn.net/base/video/473e985339173555d42d714d9fb52015d3284742688ff42d7f89925dbf4c721e',
+                chapter: 'Chapter V',
+                title: 'Elephant Aura',
+                subtitle: 'A gentle giant becomes friend'
+            }
+        ];
+
+        // ===== DOM ELEMENTS =====
+        const loading = document.getElementById('loading');
+        const introScreen = document.getElementById('intro-screen');
+        const chapterCard = document.getElementById('chapter-card');
+        const chapterNumber = document.getElementById('chapter-number');
+        const chapterTitle = document.getElementById('chapter-title');
+        const chapterSubtitle = document.getElementById('chapter-subtitle');
+        const letterboxTop = document.getElementById('letterbox-top');
+        const letterboxBottom = document.getElementById('letterbox-bottom');
+        const fadeOverlay = document.getElementById('fade-overlay');
+        const video = document.getElementById('main-video');
+        const sceneIndicator = document.getElementById('scene-indicator');
+        const sceneName = document.getElementById('scene-name');
+        const controls = document.getElementById('controls');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const creditsScreen = document.getElementById('credits-screen');
+
+        // ===== STATE =====
+        let currentScene = 0;
+        let isPlaying = false;
+        let controlsTimeout;
+        let movieStarted = false;
+
+        // ===== UTILITY FUNCTIONS =====
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ===== LOADING =====
+        async function initialize() {
+            // Preload first video
+            video.src = scenes[0].video;
+            video.load();
+
+            await sleep(2000);
+            loading.classList.add('hidden');
+        }
+
+        // ===== START MOVIE =====
+        async function startMovie() {
+            if (movieStarted) return;
+            movieStarted = true;
+
+            // Expand letterbox for dramatic effect
+            letterboxTop.classList.add('expanded');
+            letterboxBottom.classList.add('expanded');
+
+            // Fade out intro
+            introScreen.classList.add('hidden');
+
+            await sleep(1500);
+
+            // Show first chapter
+            await showChapter(0);
+        }
+
+        // ===== CHAPTER TRANSITIONS =====
+        async function showChapter(index) {
+            currentScene = index;
+            const scene = scenes[index];
+
+            // Reset letterbox
+            letterboxTop.classList.remove('expanded');
+            letterboxBottom.classList.remove('expanded');
+
+            // Show chapter card
+            chapterNumber.textContent = scene.chapter;
+            chapterTitle.textContent = scene.title;
+            chapterSubtitle.textContent = scene.subtitle;
+            chapterCard.classList.add('visible');
+
+            await sleep(3500);
+
+            // Fade out chapter card
+            chapterCard.classList.remove('visible');
+
+            await sleep(1000);
+
+            // Play video
+            playScene(index);
+        }
+
+        // ===== PLAY SCENE =====
+        async function playScene(index) {
+            const scene = scenes[index];
+
+            // Fade out current video
+            video.classList.remove('visible');
+            fadeOverlay.classList.add('visible');
+
+            await sleep(800);
+
+            // Load new video
+            video.src = scene.video;
+            video.load();
+
+            video.onloadeddata = async () => {
+                fadeOverlay.classList.remove('visible');
+                video.classList.add('visible');
+                sceneName.textContent = scene.title;
+                sceneIndicator.classList.add('visible');
+                controls.classList.add('visible');
+
+                video.play();
+                isPlaying = true;
+                playBtn.textContent = '⏸';
+
+                totalTimeEl.textContent = formatTime(video.duration || 0);
+            };
+
+            video.onended = () => {
+                goToNextScene();
+            };
+        }
+
+        // ===== NAVIGATION =====
+        async function goToNextScene() {
+            if (currentScene < scenes.length - 1) {
+                // Fade transition
+                fadeOverlay.classList.add('visible');
+                sceneIndicator.classList.remove('visible');
+
+                await sleep(1500);
+
+                await showChapter(currentScene + 1);
+            } else {
+                // Show credits
+                showCredits();
+            }
+        }
+
+        async function goToPrevScene() {
+            if (currentScene > 0) {
+                fadeOverlay.classList.add('visible');
+                sceneIndicator.classList.remove('visible');
+
+                await sleep(1000);
+
+                await showChapter(currentScene - 1);
+            }
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                video.pause();
+                playBtn.textContent = '▶';
+            } else {
+                video.play();
+                playBtn.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // ===== CREDITS =====
+        async function showCredits() {
+            fadeOverlay.classList.add('visible');
+            controls.classList.remove('visible');
+            sceneIndicator.classList.remove('visible');
+            video.classList.remove('visible');
+
+            await sleep(2000);
+
+            fadeOverlay.classList.remove('visible');
+            creditsScreen.classList.add('visible');
+        }
+
+        // ===== PROGRESS BAR =====
+        function updateProgress() {
+            if (video.duration) {
+                const percent = (video.currentTime / video.duration) * 100;
+                progressFill.style.width = percent + '%';
+                currentTimeEl.textContent = formatTime(video.currentTime);
+            }
+        }
+
+        function seekVideo(e) {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            video.currentTime = percent * video.duration;
+        }
+
+        // ===== CONTROLS VISIBILITY =====
+        function showControls() {
+            controls.classList.add('visible');
+            sceneIndicator.classList.add('visible');
+            document.body.classList.add('show-cursor');
+
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (isPlaying) {
+                    controls.classList.remove('visible');
+                    document.body.classList.remove('show-cursor');
+                }
+            }, 3000);
+        }
+
+        // ===== EVENT LISTENERS =====
+        introScreen.addEventListener('click', startMovie);
+
+        playBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', goToPrevScene);
+        nextBtn.addEventListener('click', goToNextScene);
+
+        progressBar.addEventListener('click', seekVideo);
+
+        video.addEventListener('timeupdate', updateProgress);
+
+        document.addEventListener('mousemove', showControls);
+        document.addEventListener('touchstart', showControls);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlayPause();
+            } else if (e.code === 'ArrowRight') {
+                goToNextScene();
+            } else if (e.code === 'ArrowLeft') {
+                goToPrevScene();
+            }
+        });
+
+        // Double-tap to fullscreen on mobile
+        let lastTap = 0;
+        document.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    document.documentElement.requestFullscreen();
+                }
+            }
+            lastTap = currentTime;
+        });
+
+        // ===== INITIALIZE =====
+        initialize();
+    </script>
+
+
+
+</body></html>
